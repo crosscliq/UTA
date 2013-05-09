@@ -6,7 +6,7 @@ class UTAApi {
 
     public $ch;
     public $root = 'http://api.rideuta.com/SIRI/SIRI.svc';
-    public $debug = true;
+    public $debug = false;
     public $apikey = "UNE1P00BQW7";
     public $response = null;
 
@@ -46,7 +46,7 @@ function StopMonitoring ($stopid) {
 	$params['onwardcalls'] = 'true';
 	$params['filterroute'] = '';
 	$this->response = $this->call('StopMonitor', $params);
-	var_dump($this->response);
+	var_dump($this->response->StopMonitoringDelivery->MonitoredStopVisit->MonitoredVehicleJourney[0]->MonitoredCall->Extensions->EstimatedDepartureTime);
 	die();
 	return $this->response;
 }
@@ -61,17 +61,10 @@ public function call($url, $params) {
         $url = $this->root . $url;
         foreach($params as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 		rtrim($fields_string,'&');
-
-
-
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url . '?' . $fields_string);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_VERBOSE, $this->debug);
-
-		
-
-
         $start = microtime(true);
         $this->log('Call to ' . $this->root . $url . ' ' . $params);
         if($this->debug) {
@@ -93,7 +86,7 @@ public function call($url, $params) {
         if(curl_error($ch)) {
             error_log("API call to $url failed:  ". curl_error($ch));
         }
-        $result = json_encode(simplexml_load_string(curl_exec($ch)));
+        $result = simplexml_load_string(curl_exec($ch));
        
         if($result === null) { die('empty response');};
         
@@ -108,13 +101,14 @@ public function call($url, $params) {
 
 }
 
-$api = new UTAApi();
-$api->StopMonitoring('133054');
-
-
-
 
 
 
 
 ?>
+
+
+<html>
+<h1><?php $api = new UTAApi();
+$api->StopMonitoring('125424'); ?></h1>
+<html>
