@@ -43,11 +43,12 @@ function StopMonitoring ($stopid) {
 	$params = array();
 	$params['stopid'] = $stopid;
 	$params['minutesout'] =  30;
-	$params['onwardcalls'] = 'true';
+	$params['onwardcalls'] = 'false';
 	$params['filterroute'] = '';
 	$this->response = $this->call('StopMonitor', $params);
-	var_dump($this->response->StopMonitoringDelivery->MonitoredStopVisit->MonitoredVehicleJourney[0]->MonitoredCall->Extensions->EstimatedDepartureTime);
-	die();
+	echo $this->response->StopMonitoringDelivery->MonitoredStopVisit->MonitoredVehicleJourney[0]->MonitoredCall->Extensions->EstimatedDepartureTime;
+	
+	var_dump($this->response);
 	return $this->response;
 }
 
@@ -109,6 +110,6 @@ public function call($url, $params) {
 
 
 <html>
-<h1><?php $api = new UTAApi();
-$api->StopMonitoring('125424'); ?></h1>
+<pre><?php $api = new UTAApi();
+$api->StopMonitoring('125424'); ?></pre>
 <html>
