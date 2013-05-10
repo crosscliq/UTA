@@ -39,29 +39,44 @@ function VehicleMonitoringbyVehicle () {
 }
 
 function StopMonitoring ($stopid) {
+
 	$params = array();
 	$params['stopid'] = $stopid;
 	$params['minutesout'] =  90;
 	$params['onwardcalls'] = 'true';
 	$params['filterroute'] = '';
 	$this->response = $this->call('StopMonitor', $params);
-	var_dump($this->response->StopMonitoringDelivery->children);
-	var_dump($this->response);
-	return $this->response;
+	//var_dump($this->response->StopMonitoringDelivery->MonitoredStopVisit);
+	//var_dump($this->response);
+	return $this;
 }
 
 function renderStopMonitoring() {
-	$this->response;
-
-
-
 	$r = new stdClass;
-	$r->responseTimestamp = $this->response->StopMonitoringDelivery->ResponseTimestamp;
-	$r->validUntil = $this->response->StopMonitoringDelivery->ValidUntil;
-}
+	$r->responseTimestamp = (string) $this->response->StopMonitoringDelivery->ResponseTimestamp;
+	$r->validUntil =(string) $this->response->StopMonitoringDelivery->ValidUntil;
 
-function makeProcessRate() {
-	/*the progress rate flag indicates the following states as of the 
+	$r->stopName =(string) $this->response->StopMonitoringDelivery->Extensions->StopName;
+	$r->stopLat =(string) $this->response->StopMonitoringDelivery->Extensions->StopLongitude;
+	$r->stopLng =(string) $this->response->StopMonitoringDelivery->Extensions->StopLatitude;
+	$r->items = array();
+	foreach ($this->response->StopMonitoringDelivery->MonitoredStopVisit->MonitoredVehicleJourney as $bus) {
+		$obj = new stdClass;
+		$obj->classes =array();
+		$obj->classes[] = $this->makeProcessRateClass($bus->ProgressRate);	
+		$obj->status = $this->makeProcessRateText($bus->ProgressRate);
+		$obj->num = (string) $bus->LineRef;
+		$obj->dest = (string) $bus->DirectionRef;
+		$obj->loc = array("lat"=> (float) $bus->VehicleLocation->Latitude, "lng"=> (float) $bus->VehicleLocation->Longitude);	
+		$obj->eta = (int) $bus->MonitoredCall->Extensions->EstimatedDepartureTime;
+		$r->items[] = $obj;
+	}	
+	
+	return $r;
+
+}
+/* FROM UTA
+	the progress rate flag indicates the following states as of the 
 last chance on 3/21/12 
 
     0 = Early - vehicle is running early 
@@ -71,6 +86,56 @@ seconds behind
     3 = Critical Late - vehicle is greater than 10 minutes late 
     4 = Critical Early - vehicle is greater than 10 minutes early 
     5 = Not Set - no data available */
+
+function makeProcessRateText($rate) {
+	$process = null;
+	switch ($rate) {
+		case '0':
+			$process = 'Early';
+			break;
+		case '1':
+			$process = 'On Time';
+			break;
+		case '2':
+			$process = 'Late';
+			break;
+		case '3':
+			$process = 'Critical Late';
+			break;
+		case '4':
+			$process = 'Critical Early';
+			break;
+		default:
+			$process = 'Not Set';
+			break;
+	}
+	return $process;
+	
+}
+function makeProcessRateClass($rate) {
+	$process = null;
+	switch ($rate) {
+		case '0':
+			$process = 'early';
+			break;
+		case '1':
+			$process = 'ontime';
+			break;
+		case '2':
+			$process = 'late';
+			break;
+		case '3':
+			$process = 'criticallate';
+			break;
+		case '4':
+			$process = 'criticalearly';
+			break;
+		default:
+			$process = 'noprocess';
+			break;
+	}
+	return $process;
+	
 }
 
 function CloseStopMonitoring () {
@@ -80,7 +145,7 @@ function CloseStopMonitoring () {
 public function call($url, $params) {
 
         $params['usertoken'] = $this->apikey;
-      
+      	$fields_string = '';
         foreach($params as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 		rtrim($fields_string,'&');
 
@@ -131,8 +196,3 @@ public function call($url, $params) {
 
 ?>
 
-
-<html>
-<pre><?php $api = new UTAApi();
-$api->StopMonitoring('125424'); ?></pre>
-<html>

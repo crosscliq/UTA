@@ -1,6 +1,5 @@
 <html>
   <head>
-  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 	 <style type="text/css">
 		html { 		  height:100%; }
 		@-webkit-keyframes bgani
@@ -26,7 +25,7 @@
 	      width:100%;
 		}
 		#header {
-		  background:url(images/header.png) no-repeat;
+		  background:url(ui/images/header.png) no-repeat;
 		  background-size:100%;
 		  background-position:top center;
 		  width:100%;
@@ -43,10 +42,17 @@
 			padding:10px; 
 			margin:0px;
 
-			padding-top:88px;
+			padding-top:100px;
 			display:inline;
 		}
 		p.l { float:left; }
+		p.c { 
+			padding:0; 
+			margin:0px;
+			width:100%;
+			padding-top:5px;
+			text-align: center;
+			 }
 		p.r { float:right; }
 		ul {
 		  position:absolute;
@@ -74,7 +80,7 @@
 		  opacity: 0;
 		  -webkit-transform: translateY( -100% ) translateZ(-200px);
 		}
-		.bus { display:inline-block;  height:40px; width:80px;text-align:center; padding:5px 5px 5px 30px; background:rgba(255,255,255,0.9) url(images/icon.png) 5 8 no-repeat; border-radius:5px;line-height:35px; margin:0px; }
+		.bus { display:inline-block;  height:40px; width:80px;text-align:center; padding:5px 5px 5px 30px; background:rgba(255,255,255,0.9) url(ui/images/icon.png) 5 8 no-repeat; border-radius:5px;line-height:35px; margin:0px; }
 		.time { display:inline-block; height:40px; width:120px; text-align:center; padding:5px; box-shadow:-1px -1px 0px rgba(140,140,140,0.4); line-height:35px;background:rgba(255,255,255,0.7); border-radius:5px; margin:0px;position:absolute;right:30;}
 		.time small { font-size:13px;color:#999;line-height:24px; font-weight:normal;}
 		.glass:after{
@@ -92,31 +98,17 @@
   <body>
 	<div id="wrapper">
 		<div id="header">
-			<p class="l">Bus #</p>
-			<p class="r">estimated arrival</p>
+			
 		</div>
-		<ul id="items">
-			<li class="glass"><h3 class="bus">202</h3><h2 class="time">10<small>m</small> 04<small>s</small></h2></li>
-			<li class="glass"><h3 class="bus">300</h3><h2 class="time">14<small>m</small> 12<small>s</small></h2></li>
-			<li class="future glass"><h3 class="bus">R300</h3><h2 class="time">18<small>m</small> 14<small>s</small></h2></li>
-		</ul>
+		This is the HOME PAGE
+	<?php else: ?>
+
+
+<?php endif; ?>
 	</div>
 	     <script type="text/javascript">
 		 
-		// counter
-		
-		// load in	 
-		 
-		 window.onload = function () {
-		 
-
-		 
-		   window.scroll(0,0);
-			setTimeout( function () {
-			 document.querySelector('.future').className="glass";
-			 document.querySelector('#items').scrollTop = document.querySelector('#items').scrollHeight;
-			}, 2000);
-		  }
+	
 		 </script>
   </body>
 </html>
