@@ -16,13 +16,12 @@ class UTAApi {
 
  	$this->ch = curl_init();
     curl_setopt($this->ch, CURLOPT_USERAGENT, 'CrossCliq-PHP/1.0.13');
-    curl_setopt($this->ch, CURLOPT_POST, true);
     curl_setopt($this->ch, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($this->ch, CURLOPT_HEADER, false);
     curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 30);
     curl_setopt($this->ch, CURLOPT_TIMEOUT, 600);
-
+    
 
     $this->root = rtrim($this->root, '/') . '/';
  }
@@ -42,14 +41,36 @@ function VehicleMonitoringbyVehicle () {
 function StopMonitoring ($stopid) {
 	$params = array();
 	$params['stopid'] = $stopid;
-	$params['minutesout'] =  30;
-	$params['onwardcalls'] = 'false';
+	$params['minutesout'] =  90;
+	$params['onwardcalls'] = 'true';
 	$params['filterroute'] = '';
 	$this->response = $this->call('StopMonitor', $params);
-	echo $this->response->StopMonitoringDelivery->MonitoredStopVisit->MonitoredVehicleJourney[0]->MonitoredCall->Extensions->EstimatedDepartureTime;
-	
+	var_dump($this->response->StopMonitoringDelivery->children);
 	var_dump($this->response);
 	return $this->response;
+}
+
+function renderStopMonitoring() {
+	$this->response;
+
+
+
+	$r = new stdClass;
+	$r->responseTimestamp = $this->response->StopMonitoringDelivery->ResponseTimestamp;
+	$r->validUntil = $this->response->StopMonitoringDelivery->ValidUntil;
+}
+
+function makeProcessRate() {
+	/*the progress rate flag indicates the following states as of the 
+last chance on 3/21/12 
+
+    0 = Early - vehicle is running early 
+    1 = On Time - vehicle is running on stated to up to + 4 minutes 59 
+seconds behind 
+    2 = Late - vehicle is greater than 4:59 to 9:59 late 
+    3 = Critical Late - vehicle is greater than 10 minutes late 
+    4 = Critical Early - vehicle is greater than 10 minutes early 
+    5 = Not Set - no data available */
 }
 
 function CloseStopMonitoring () {
@@ -59,12 +80,14 @@ function CloseStopMonitoring () {
 public function call($url, $params) {
 
         $params['usertoken'] = $this->apikey;
-        $url = $this->root . $url;
+      
         foreach($params as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
 		rtrim($fields_string,'&');
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url . '?' . $fields_string);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+
+
+		$ch = $this->ch;
+		curl_setopt($ch, CURLOPT_URL, $this->root . $url . '?' . $fields_string);
 		curl_setopt($ch, CURLOPT_VERBOSE, $this->debug);
         $start = microtime(true);
         $this->log('Call to ' . $this->root . $url . ' ' . $params);
