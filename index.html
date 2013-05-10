@@ -15,6 +15,9 @@
 		  -webkit-animation-timing-function: ease-in-out;
 		  -webkit-animation-direction:alternate;
 		  height:100%;
+		  font-family:verdana;
+		  color:#666;
+		  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.6);
 		}
 		#wrapper {
 		  background: -webkit-radial-gradient(center, ellipse cover, rgba(249,252,255,0.8) 0%,rgba(195,195,195,0.7) 47%,rgba(140,140,140,0.4) 100%);
@@ -29,16 +32,28 @@
 		  height:125px;
 		  position:relative;
 		  top:0;
-		  color:#b0aeaf;
+		  color:#777;
 		  font-weight:bold;
 		  box-shadow:2px 2px 12px 0px rgba(100,100,100,0.4);
 		  text-shadow: -1px -1px 2px rgba(255, 255, 255, 0.6);
+		  font-size:0.8em;
 		}
+		#header p { 
+			padding:10px; 
+			margin:0px;
+
+			padding-top:100px;
+			display:inline;
+		}
+		p.l { float:left; }
+		p.r { float:right; }
 		ul {
 		  position:absolute;
 		  top:125;
 		  width:100%;
-		  height:100%;
+		  height:70%;
+		  overflow-y:hidden;
+		  overflow-x:hidden;
 		  list-style:none;
 		  margin:0px;
 		  padding:0px;
@@ -49,7 +64,7 @@
 		  display:list-item;
 		  width:100%;
 		  position: relative;
-		  padding:16px;
+		  padding:10px;
 		  text-align: -webkit-match-parent;
 		  -webkit-transform: translateZ(0px);
           -webkit-transition: all 1000ms cubic-bezier(0.260, 0.860, 0.440, 0.985), opacity 300ms ease;
@@ -58,15 +73,17 @@
 		  opacity: 0;
 		  -webkit-transform: translateY( -100% ) translateZ(-200px);
 		}
-		
+		.bus { display:inline-block;  height:40px; width:80px;text-align:center; padding:5px 5px 5px 30px; background:rgba(255,255,255,0.9) url(images/icon.png) 5 8 no-repeat; border-radius:5px;line-height:35px; margin:0px; }
+		.time { display:inline-block; height:40px; width:120px; text-align:center; padding:5px; box-shadow:-1px -1px 0px rgba(140,140,140,0.4); line-height:35px;background:rgba(255,255,255,0.7); border-radius:5px; margin:0px;position:absolute;right:30;}
+		.time small { font-size:13px;color:#999;line-height:24px; font-weight:normal;}
 		.glass:after{
 		  content: " "; 
     	  display: block;
     	  position: absolute;
     	  top: 0; right: 0; bottom: 0; left: 0;
     	  border: 1px solid rgba(255, 255, 255, 0.1); border-bottom: 0;
-    	  -webkit-background-origin: border-box;
-    	  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .35)), to(rgba(0, 0, 0, .20))), -webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(255, 255, 255, 0)), color-stop(0.5, rgba(255, 255, 255, .15)), color-stop(0.501, rgba(255, 255, 255, 0)), color-stop(1, rgba(255, 255, 255, 0)));
+		  -webkit-background-origin: border-box;
+		  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgba(255, 255, 255, .35)), to(rgba(0, 0, 0, .20))), -webkit-gradient(linear, left top, right bottom, color-stop(0, rgba(255, 255, 255, 0)), color-stop(0.5, rgba(255, 255, 255, .15)), color-stop(0.501, rgba(255, 255, 255, 0)), color-stop(1, rgba(255, 255, 255, 0)));
 		}
 		
 	</style>
@@ -74,18 +91,30 @@
   <body>
 	<div id="wrapper">
 		<div id="header">
-		estimated arrival
+			<p class="l">Bus #</p>
+			<p class="r">estimated arrival</p>
 		</div>
 		<ul id="items">
-			<li class="glass"><i class="bus">300</i><h2 class="time">12:13</h2></li>
-			<li class="glass"><i class="bus">500</i><h2 class="time">16:18</h2></li>
-			<li class="future glass"><i class="bus">400</i><h2 class="time">18:31</h2></li>
+			<li class="glass"><h3 class="bus">202</h3><h2 class="time">10<small>m</small> 04<small>s</small></h2></li>
+			<li class="glass"><h3 class="bus">300</h3><h2 class="time">14<small>m</small> 12<small>s</small></h2></li>
+			<li class="future glass"><h3 class="bus">R300</h3><h2 class="time">18<small>m</small> 14<small>s</small></h2></li>
 		</ul>
 	</div>
 	     <script type="text/javascript">
+		 
+		// counter
+		
+		// load in	 
+		 
 		 window.onload = function () {
+		 
+
+		 
 		   window.scroll(0,0);
-			document.querySelector('.future').className="glass";
+			setTimeout( function () {
+			 document.querySelector('.future').className="glass";
+			 document.querySelector('#items').scrollTop = document.querySelector('#items').scrollHeight;
+			}, 2000);
 		  }
 		 </script>
   </body>
